@@ -3,56 +3,42 @@ package com.rps;
 import java.util.Random;
 import java.util.Scanner;
 
+import static com.rps.Weapon.PAPER;
+import static com.rps.Weapon.ROCK;
+import static com.rps.Weapon.SCISSORS;
+
 public class Rps {
     private Scanner scanner = new Scanner(System.in);
     private Random random = new Random();
     private String userName;
     private int roundsToWin;
     private int roundCount;
-    private int computerChoice;
-    private int userChoice;
     private int userScore;
     private int computerScore;
-    private int unfairComputerChoice1;
-    private int unfairComputerChoice2;
-    private int unfairComputerChoice3;
-    private int unfair;
+    private String unfair;
 
     public void playGame() {
         roundCount = 0;
         userScore = 0;
         computerScore = 0;
         System.out.println("##### Welcome to Rock-Paper-Scissors game #####\n");
-        setGameDetails();
+        setGameSettings();
         startGame();
         while ((userScore != roundsToWin) && (computerScore != roundsToWin)) {
             roundCount++;
             System.out.println("### Round number " + roundCount + " ###");
-            userChoice();
-            if (unfair == 0) {
-                computerChoice();
-            }
-            if (unfair == 1) {
-                unfairComputerChoice();;
-            }
             playRound();
         }
         gameResult();
     }
 
-    private void setGameDetails() {
+    private void setGameSettings() {
         System.out.print("Type in your name: ");
         userName = scanner.next();
         System.out.print("Hello " + userName + "! Set the number of won rounds needed to win the game: ");
         roundsToWin = scanner.nextInt();
-        System.out.print("Set fairness. Press \"f\" to play a fair game or press \"u\" to play unfair game.");
-        userName = scanner.next();
-        if (scanner.next().equals("f")) {
-            unfair = 0;
-        }
-        if (scanner.next().equals("u")) {
-            unfair = 1;
-        }
+        System.out.print("Set fairness. Press \"f\" to play a fair game or press \"u\" to play unfair game: ");
+        unfair = scanner.next();
     }
 
     private void startGame() {
@@ -69,77 +55,90 @@ public class Rps {
         }
     }
 
-    private void userChoice() {
+    private Weapon userChoice() {
         System.out.print("Choose your weapon: ");
-        userChoice = scanner.nextInt();
+        int userChoice = scanner.nextInt();
+        return Weapon.intToEnum(userChoice);
     }
 
-    private void computerChoice() {
-        computerChoice = random.nextInt(3) + 1;
+    private Weapon computerChoice() {
+        int computerChoice = random.nextInt(3) + 1;
+        return Weapon.intToEnum(computerChoice);
     }
 
-    private void unfairComputerChoice() {
-        unfairComputerChoice1 = userChoice;
+    private Weapon unfairComputerChoice(Weapon userWeapon) {
+        int randomNumber = (random.nextInt(100) + 1);
+        if ((1 <= randomNumber) && (randomNumber <= 25)) {
+            return computerLoseWeapon(userWeapon);
+        }
+        if ((26 <= randomNumber) && (randomNumber <= 50)) {
+            return userWeapon;
+        }
+        return computerWinWeapon(userWeapon);
+    }
 
-        if (userChoice == 1) {
-            unfairComputerChoice2 = 3;
+    private Weapon computerLoseWeapon(Weapon weapon) {
+        switch (weapon) {
+            case ROCK:
+                return SCISSORS;
+            case PAPER:
+                return ROCK;
+            case SCISSORS:
+                return PAPER;
+            default:
+                return null;
         }
-        if (userChoice == 2) {
-            unfairComputerChoice2 = 1;
-        }
-        if (userChoice == 3) {
-            unfairComputerChoice2 = 2;
-        }
+    }
 
-        if (userChoice == 1) {
-            unfairComputerChoice3 = 2;
-        }
-        if (userChoice == 2) {
-            unfairComputerChoice3 = 3;
-        }
-        if (userChoice == 3) {
-            unfairComputerChoice3 = 1;
-        }
-
-        computerChoice = (random.nextInt(100) + 1);
-        if ((1 <= computerChoice) && (computerChoice <= 25)) {
-            computerChoice = unfairComputerChoice1;
-        }
-        if ((26 <= computerChoice) && (computerChoice <= 50)) {
-            computerChoice = unfairComputerChoice2;
-        }
-        if ((51 <= computerChoice) && (computerChoice <= 100)) {
-            computerChoice = unfairComputerChoice3;
+    private Weapon computerWinWeapon(Weapon weapon) {
+        switch (weapon) {
+            case ROCK:
+                return PAPER;
+            case PAPER:
+                return SCISSORS;
+            case SCISSORS:
+                return ROCK;
+            default:
+                return null;
         }
     }
 
     private void playRound() {
-        System.out.println("Computer has chosen: " + computerChoice);
-        System.out.println("You have chosen: " + userChoice);
-        if (userChoice == computerChoice) {
+        Weapon userWeapon = userChoice();
+        Weapon computerWeapon = null;
+        if (unfair.equals("f")) {
+            computerWeapon = computerChoice();
+        }
+        if (unfair.equals("u")) {
+            computerWeapon = unfairComputerChoice(userWeapon);
+        }
+
+        System.out.println("Computer has chosen: " + computerWeapon);
+        System.out.println("You have chosen: " + userWeapon);
+        if (userWeapon == computerWeapon) {
             System.out.println("It is a tie!");
         } else {
-            if ((userChoice == 1) && (computerChoice == 2)) {
+            if ((userWeapon == ROCK) && (computerWeapon == PAPER)) {
                 System.out.println("Paper covers rock. You lose!");
                 computerScore++;
             }
-            if ((userChoice == 1) && (computerChoice == 3)) {
+            if ((userWeapon == ROCK) && (computerWeapon == SCISSORS)) {
                 System.out.println("Rock crushes scissors. You win!");
                 userScore++;
             }
-            if ((userChoice == 2) && (computerChoice == 1)) {
+            if ((userWeapon == PAPER) && (computerWeapon == ROCK)) {
                 System.out.println("Paper covers rock. You win!");
                 userScore++;
             }
-            if ((userChoice == 2) && (computerChoice == 3)) {
+            if ((userWeapon == PAPER) && (computerWeapon == SCISSORS)) {
                 System.out.println("Scissors cuts paper. You lose!");
                 computerScore++;
             }
-            if ((userChoice == 3) && (computerChoice == 1)) {
+            if ((userWeapon == SCISSORS) && (computerWeapon == ROCK)) {
                 System.out.println("Rock crushes scissors. You lose!");
                 computerScore++;
             }
-            if ((userChoice == 3) && (computerChoice == 2)) {
+            if ((userWeapon == SCISSORS) && (computerWeapon == PAPER)) {
                 System.out.println("Scissors cuts paper. You win!");
                 userScore++;
             }
@@ -158,19 +157,21 @@ public class Rps {
                         "Computer final score is: " + computerScore);
 
         if (userScore > computerScore) {
-            System.out.println("Congratulations " + userName.toUpperCase() + ", you have won the game!");
+            System.out.println("Congratulations " + userName.toUpperCase() + ", you have won the game!\n");
         }
         if (userScore < computerScore) {
-            System.out.println("Sorry " + userName.toUpperCase() + ", you have lost the game!");
+            System.out.println("Sorry " + userName.toUpperCase() + ", you have lost the game!\n");
         }
         if (userScore == computerScore) {
-            System.out.println("It has been a tie in the game!");
+            System.out.println("It has been a tie in the game!\n");
         }
-        System.out.println("Press \"x\" to quit or press \"n\" to play again.");
-        if (scanner.next().equals("x")) {
+        System.out.print("Press \"x\" to quit or press \"n\" to play again: ");
+        String quitOrPlayAgain = scanner.next();
+        if (quitOrPlayAgain.equals("x")) {
             System.exit(0);
         }
-        if (scanner.next().equals("n")) {
+        if (quitOrPlayAgain.equals("n")) {
+            System.out.println("");
             playGame();
         }
     }
