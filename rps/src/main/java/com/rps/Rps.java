@@ -35,13 +35,19 @@ public class Rps {
     private void setGameSettings() {
         System.out.print("Type in your name: ");
         userName = scanner.next();
-        System.out.print("Hello " + userName + "! Set the number of won rounds needed to win the game: ");
+        do {
+            System.out.print("Hello " + userName + "! Set the number of won rounds needed to win the game: ");
+            scanner.nextLine();
+        } while (!scanner.hasNextInt());
         roundsToWin = scanner.nextInt();
-        System.out.print("Set fairness. Press \"f\" to play a fair game or press \"u\" to play unfair game: ");
-        unfair = scanner.next();
+        do {
+            System.out.print("Set fairness. Press \"f\" to play a fair game or press \"u\" to play unfair game: ");
+            unfair = scanner.next();
+        } while ((!unfair.equals("f")) && (!unfair.equals("u")));
     }
 
     private void startGame() {
+        String dupa;
         System.out.println("----------");
         System.out.println(
                 "Controls:\n" +
@@ -56,8 +62,14 @@ public class Rps {
     }
 
     private Weapon userChoice() {
-        System.out.print("Choose your weapon: ");
-        int userChoice = scanner.nextInt();
+        int userChoice;
+        do {
+            System.out.print("Choose your weapon: ");
+            scanner.nextLine();
+        } while (!scanner.hasNextInt());
+        do {
+            userChoice = scanner.nextInt();
+        } while (userChoice != 1 && userChoice != 2 && userChoice != 3);
         return Weapon.intToEnum(userChoice);
     }
 
@@ -150,6 +162,7 @@ public class Rps {
     }
 
     private void gameResult() {
+        String quitOrPlayAgain;
         System.out.println(
                 "### GAME RESULT ###\n" +
                         "Total rounds played: " + roundCount + "\n" +
@@ -165,8 +178,10 @@ public class Rps {
         if (userScore == computerScore) {
             System.out.println("It has been a tie in the game!\n");
         }
-        System.out.print("Press \"x\" to quit or press \"n\" to play again: ");
-        String quitOrPlayAgain = scanner.next();
+        do {
+            System.out.print("Press \"x\" to quit or press \"n\" to play again: ");
+            quitOrPlayAgain = scanner.next();
+        } while ((!quitOrPlayAgain.equals("x")) && (!quitOrPlayAgain.equals("n")));
         if (quitOrPlayAgain.equals("x")) {
             System.exit(0);
         }
