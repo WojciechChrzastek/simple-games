@@ -3,9 +3,7 @@ package com.rps;
 import java.util.Random;
 import java.util.Scanner;
 
-import static com.rps.Weapon.PAPER;
-import static com.rps.Weapon.ROCK;
-import static com.rps.Weapon.SCISSORS;
+import static com.rps.Weapon.*;
 
 public class Rps {
     private Scanner scanner = new Scanner(System.in);
@@ -47,13 +45,14 @@ public class Rps {
     }
 
     private void startGame() {
-        String dupa;
         System.out.println("----------");
         System.out.println(
                 "Controls:\n" +
                         "Press \"1\" to choose -> rock\n" +
                         "Press \"2\" to choose -> paper\n" +
-                        "Press \"3\" to choose -> scissors\n");
+                        "Press \"3\" to choose -> scissors\n" +
+                        "Press \"4\" to choose -> lizard\n" +
+                        "Press \"5\" to choose -> spock\n");
         System.out.println("Press \"ENTER\" to start the game!");
         try {
             System.in.read();
@@ -69,7 +68,7 @@ public class Rps {
         } while (!scanner.hasNextInt());
         do {
             userChoice = scanner.nextInt();
-        } while (userChoice != 1 && userChoice != 2 && userChoice != 3);
+        } while (userChoice != 1 && userChoice != 2 && userChoice != 3 && userChoice != 4 && userChoice != 5);
         return Weapon.intToEnum(userChoice);
     }
 
@@ -97,6 +96,10 @@ public class Rps {
                 return ROCK;
             case SCISSORS:
                 return PAPER;
+            case LIZARD:
+                return ROCK;
+            case SPOCK:
+                return LIZARD;
             default:
                 return null;
         }
@@ -110,6 +113,10 @@ public class Rps {
                 return SCISSORS;
             case SCISSORS:
                 return ROCK;
+            case LIZARD:
+                return ROCK;
+            case SPOCK:
+                return PAPER;
             default:
                 return null;
         }
@@ -138,6 +145,14 @@ public class Rps {
                 System.out.println("Rock crushes scissors. You win!");
                 userScore++;
             }
+            if ((userWeapon == ROCK) && (computerWeapon == LIZARD)) {
+                System.out.println("Rock crushes lizard. You win!");
+                userScore++;
+            }
+            if ((userWeapon == ROCK) && (computerWeapon == SPOCK)) {
+                System.out.println("Spock vaporizes rock. You lose!");
+                computerScore++;
+            }
             if ((userWeapon == PAPER) && (computerWeapon == ROCK)) {
                 System.out.println("Paper covers rock. You win!");
                 userScore++;
@@ -146,6 +161,14 @@ public class Rps {
                 System.out.println("Scissors cuts paper. You lose!");
                 computerScore++;
             }
+            if ((userWeapon == PAPER) && (computerWeapon == LIZARD)) {
+                System.out.println("Lizard eats paper. You lose!");
+                computerScore++;
+            }
+            if ((userWeapon == PAPER) && (computerWeapon == SPOCK)) {
+                System.out.println("Paper disproves spock. You win!");
+                userScore++;
+            }
             if ((userWeapon == SCISSORS) && (computerWeapon == ROCK)) {
                 System.out.println("Rock crushes scissors. You lose!");
                 computerScore++;
@@ -153,6 +176,46 @@ public class Rps {
             if ((userWeapon == SCISSORS) && (computerWeapon == PAPER)) {
                 System.out.println("Scissors cuts paper. You win!");
                 userScore++;
+            }
+            if ((userWeapon == SCISSORS) && (computerWeapon == LIZARD)) {
+                System.out.println("Scissors decapitates lizard. You win!");
+                userScore++;
+            }
+            if ((userWeapon == SCISSORS) && (computerWeapon == SPOCK)) {
+                System.out.println("Spock smashes scissors. You lose!");
+                computerScore++;
+            }
+            if ((userWeapon == LIZARD) && (computerWeapon == ROCK)) {
+                System.out.println("Rock crushes lizard. You lose!");
+                computerScore++;
+            }
+            if ((userWeapon == LIZARD) && (computerWeapon == PAPER)) {
+                System.out.println("Lizard eats paper. You win!");
+                userScore++;
+            }
+            if ((userWeapon == LIZARD) && (computerWeapon == SCISSORS)) {
+                System.out.println("Scissors decapitates lizard. You lose!");
+                computerScore++;
+            }
+            if ((userWeapon == LIZARD) && (computerWeapon == SPOCK)) {
+                System.out.println("Lizard poisons spock. You win!");
+                computerScore++;
+            }
+            if ((userWeapon == SPOCK) && (computerWeapon == ROCK)) {
+                System.out.println("Spock vaporizes rock. You win!");
+                userScore++;
+            }
+            if ((userWeapon == SPOCK) && (computerWeapon == PAPER)) {
+                System.out.println("Paper disproves spock. You lose!");
+                computerScore++;
+            }
+            if ((userWeapon == SPOCK) && (computerWeapon == SCISSORS)) {
+                System.out.println("Spock smashes scissors. You win!");
+                userScore++;
+            }
+            if ((userWeapon == SPOCK) && (computerWeapon == LIZARD)) {
+                System.out.println("Lizard poisons spock. You lose!");
+                computerScore++;
             }
         }
         System.out.println(
