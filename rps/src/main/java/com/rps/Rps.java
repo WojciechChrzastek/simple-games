@@ -1,25 +1,24 @@
 package com.rps;
 
-import java.util.Random;
 import java.util.Scanner;
-
-import static com.rps.Weapon.*;
 
 public class Rps {
     private Scanner scanner = new Scanner(System.in);
-    private Random random = new Random();
+    private WeaponChoice weaponChoice = new WeaponChoice();
     private String userName;
+    private String fairness;
     private int roundsToWin;
     private int roundCount;
     private int userScore;
     private int computerScore;
-    private String unfair;
+
+    private static RpsGameEngine rpsGameEngine = new RpsGameEngine();
 
     public void playGame() {
         roundCount = 0;
         userScore = 0;
         computerScore = 0;
-        System.out.println("##### Welcome to Rock-Paper-Scissors game #####\n");
+        System.out.println("##### Welcome to the Rock-Paper-Scissors (+Lizzard-Spock) game #####\n-----");
         setGameSettings();
         startGame();
         while ((userScore != roundsToWin) && (computerScore != roundsToWin)) {
@@ -40,19 +39,19 @@ public class Rps {
         roundsToWin = scanner.nextInt();
         do {
             System.out.print("Set fairness. Press \"f\" to play a fair game or press \"u\" to play unfair game: ");
-            unfair = scanner.next();
-        } while ((!unfair.equals("f")) && (!unfair.equals("u")));
+            fairness = scanner.next();
+        } while ((!fairness.equals("f")) && (!fairness.equals("u")));
     }
 
     private void startGame() {
         System.out.println("----------");
         System.out.println(
-                "Controls:\n" +
-                        "Press \"1\" to choose -> rock\n" +
-                        "Press \"2\" to choose -> paper\n" +
-                        "Press \"3\" to choose -> scissors\n" +
-                        "Press \"4\" to choose -> lizard\n" +
-                        "Press \"5\" to choose -> spock\n");
+                "Game controls and rules:\n" +
+                        "Press \"1\" to choose -> rock // Rock crushes scissors and lizard.\n" +
+                        "Press \"2\" to choose -> paper // Paper covers rock and disproves spock.\n" +
+                        "Press \"3\" to choose -> scissors // Scissors cuts paper and decapitates lizard.\n" +
+                        "Press \"4\" to choose -> lizard // Lizard eats paper and poisons spock.\n" +
+                        "Press \"5\" to choose -> spock // Spock vaporizes rock and smashes scissors.\n");
         System.out.println("Press \"ENTER\" to start the game!");
         try {
             System.in.read();
@@ -60,168 +59,39 @@ public class Rps {
         }
     }
 
-    private Weapon userChoice() {
-        int userChoice;
-        do {
-            System.out.print("Choose your weapon: ");
-            scanner.nextLine();
-        } while (!scanner.hasNextInt());
-        do {
-            userChoice = scanner.nextInt();
-        } while (userChoice != 1 && userChoice != 2 && userChoice != 3 && userChoice != 4 && userChoice != 5);
-        return Weapon.intToEnum(userChoice);
-    }
-
-    private Weapon computerChoice() {
-        int computerChoice = random.nextInt(3) + 1;
-        return Weapon.intToEnum(computerChoice);
-    }
-
-    private Weapon unfairComputerChoice(Weapon userWeapon) {
-        int randomNumber = (random.nextInt(100) + 1);
-        if ((1 <= randomNumber) && (randomNumber <= 25)) {
-            return computerLoseWeapon(userWeapon);
-        }
-        if ((26 <= randomNumber) && (randomNumber <= 50)) {
-            return userWeapon;
-        }
-        return computerWinWeapon(userWeapon);
-    }
-
-    private Weapon computerLoseWeapon(Weapon weapon) {
-        switch (weapon) {
-            case ROCK:
-                return SCISSORS;
-            case PAPER:
-                return ROCK;
-            case SCISSORS:
-                return PAPER;
-            case LIZARD:
-                return ROCK;
-            case SPOCK:
-                return LIZARD;
-            default:
-                return null;
-        }
-    }
-
-    private Weapon computerWinWeapon(Weapon weapon) {
-        switch (weapon) {
-            case ROCK:
-                return PAPER;
-            case PAPER:
-                return SCISSORS;
-            case SCISSORS:
-                return ROCK;
-            case LIZARD:
-                return ROCK;
-            case SPOCK:
-                return PAPER;
-            default:
-                return null;
-        }
-    }
-
     private void playRound() {
-        Weapon userWeapon = userChoice();
+        Weapon userWeapon = weaponChoice.userChoice();
         Weapon computerWeapon = null;
-        if (unfair.equals("f")) {
-            computerWeapon = computerChoice();
+        if (fairness.equals("f")) {
+            computerWeapon = weaponChoice.fairComputerChoice();
         }
-        if (unfair.equals("u")) {
-            computerWeapon = unfairComputerChoice(userWeapon);
+        if (fairness.equals("u")) {
+            computerWeapon = weaponChoice.unfairComputerChoice(userWeapon);
         }
 
-        System.out.println("Computer has chosen: " + computerWeapon);
         System.out.println("You have chosen: " + userWeapon);
-        if (userWeapon == computerWeapon) {
+        System.out.println("Computer has chosen: " + computerWeapon);
+
+        Winner winner = rpsGameEngine.whoWin(userWeapon, computerWeapon);
+
+        if (winner == Winner.TIE) {
             System.out.println("It is a tie!");
         } else {
-            if ((userWeapon == ROCK) && (computerWeapon == PAPER)) {
-                System.out.println("Paper covers rock. You lose!");
-                computerScore++;
-            }
-            if ((userWeapon == ROCK) && (computerWeapon == SCISSORS)) {
-                System.out.println("Rock crushes scissors. You win!");
+            if (winner == Winner.USER) {
+                System.out.println(userWeapon + " wins with " + computerWeapon + ". You win this round!");
                 userScore++;
             }
-            if ((userWeapon == ROCK) && (computerWeapon == LIZARD)) {
-                System.out.println("Rock crushes lizard. You win!");
-                userScore++;
-            }
-            if ((userWeapon == ROCK) && (computerWeapon == SPOCK)) {
-                System.out.println("Spock vaporizes rock. You lose!");
-                computerScore++;
-            }
-            if ((userWeapon == PAPER) && (computerWeapon == ROCK)) {
-                System.out.println("Paper covers rock. You win!");
-                userScore++;
-            }
-            if ((userWeapon == PAPER) && (computerWeapon == SCISSORS)) {
-                System.out.println("Scissors cuts paper. You lose!");
-                computerScore++;
-            }
-            if ((userWeapon == PAPER) && (computerWeapon == LIZARD)) {
-                System.out.println("Lizard eats paper. You lose!");
-                computerScore++;
-            }
-            if ((userWeapon == PAPER) && (computerWeapon == SPOCK)) {
-                System.out.println("Paper disproves spock. You win!");
-                userScore++;
-            }
-            if ((userWeapon == SCISSORS) && (computerWeapon == ROCK)) {
-                System.out.println("Rock crushes scissors. You lose!");
-                computerScore++;
-            }
-            if ((userWeapon == SCISSORS) && (computerWeapon == PAPER)) {
-                System.out.println("Scissors cuts paper. You win!");
-                userScore++;
-            }
-            if ((userWeapon == SCISSORS) && (computerWeapon == LIZARD)) {
-                System.out.println("Scissors decapitates lizard. You win!");
-                userScore++;
-            }
-            if ((userWeapon == SCISSORS) && (computerWeapon == SPOCK)) {
-                System.out.println("Spock smashes scissors. You lose!");
-                computerScore++;
-            }
-            if ((userWeapon == LIZARD) && (computerWeapon == ROCK)) {
-                System.out.println("Rock crushes lizard. You lose!");
-                computerScore++;
-            }
-            if ((userWeapon == LIZARD) && (computerWeapon == PAPER)) {
-                System.out.println("Lizard eats paper. You win!");
-                userScore++;
-            }
-            if ((userWeapon == LIZARD) && (computerWeapon == SCISSORS)) {
-                System.out.println("Scissors decapitates lizard. You lose!");
-                computerScore++;
-            }
-            if ((userWeapon == LIZARD) && (computerWeapon == SPOCK)) {
-                System.out.println("Lizard poisons spock. You win!");
-                computerScore++;
-            }
-            if ((userWeapon == SPOCK) && (computerWeapon == ROCK)) {
-                System.out.println("Spock vaporizes rock. You win!");
-                userScore++;
-            }
-            if ((userWeapon == SPOCK) && (computerWeapon == PAPER)) {
-                System.out.println("Paper disproves spock. You lose!");
-                computerScore++;
-            }
-            if ((userWeapon == SPOCK) && (computerWeapon == SCISSORS)) {
-                System.out.println("Spock smashes scissors. You win!");
-                userScore++;
-            }
-            if ((userWeapon == SPOCK) && (computerWeapon == LIZARD)) {
-                System.out.println("Lizard poisons spock. You lose!");
+            if (winner == Winner.COMPUTER) {
+                System.out.println(userWeapon + " loses with " + computerWeapon + ". You lose this round!");
                 computerScore++;
             }
         }
+
         System.out.println(
                 "Rounds played so far: " + roundCount + "\n" +
                         "Your current score is: " + userScore + "\n" +
-                        "Computer current score is: " + computerScore + "\n");
+                        "Computer current score is: " + computerScore + "\n" +
+                        "Score needed to win the game: " + roundsToWin + "\n");
     }
 
     private void gameResult() {
@@ -246,6 +116,7 @@ public class Rps {
             quitOrPlayAgain = scanner.next();
         } while ((!quitOrPlayAgain.equals("x")) && (!quitOrPlayAgain.equals("n")));
         if (quitOrPlayAgain.equals("x")) {
+            System.out.println("-----\n##### Thank you for playing the Rock-Paper-Scissors (+Lizzard-Spock) game #####");
             System.exit(0);
         }
         if (quitOrPlayAgain.equals("n")) {
