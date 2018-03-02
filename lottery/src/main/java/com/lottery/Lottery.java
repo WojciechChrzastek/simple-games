@@ -97,19 +97,19 @@ public class Lottery {
     }
 
     private void createUserNumbersSet() {
-        int numberNumber = 1;
+        int numberOfNumber = 1;
         userNumbersSet = new HashSet<>();
 
         do {
             do {
-                System.out.print("Type in your " + numberNumber + " number (1-49) and confirm it using ENTER button: ");
+                System.out.print("Type in your " + numberOfNumber + " number (1-49) and confirm it using ENTER button: ");
                 scanner.nextLine();
                 if (scanner.hasNextInt())
                     userNumber = scanner.nextInt();
             } while (!(0 < userNumber && userNumber <= 49));
             while (!(userNumbersSet.contains(userNumber))) {
                 userNumbersSet.add(userNumber);
-                numberNumber++;
+                numberOfNumber++;
             }
         } while (!(numbersToCheckCount == userNumbersSet.size()));
 
@@ -129,7 +129,7 @@ public class Lottery {
         Set<Integer> matchesSet = new HashSet<>();
         for (int number : userNumbersSet) {
             if (randomNumbersSet.contains(number))
-            matchesSet.add(number);
+                matchesSet.add(number);
         }
         System.out.println("\nMatching numbers count: " + matchesSet.size());
         System.out.println("Matching numbers are: " + matchesSet.toString());
