@@ -20,7 +20,7 @@ public class Rps {
         computerScore = 0;
         System.out.println("##### Welcome to the Rock-Paper-Scissors (+Lizzard-Spock) game #####\n-----");
         setGameSettings();
-        startGame();
+        showControlsAndRules();
         while ((userScore != roundsToWin) && (computerScore != roundsToWin)) {
             roundCount++;
             System.out.println("### Round number " + roundCount + " ###");
@@ -35,15 +35,16 @@ public class Rps {
         do {
             System.out.print("Hello " + userName + "! Set the number of won rounds needed to win the game: ");
             scanner.nextLine();
-        } while (!scanner.hasNextInt());
-        roundsToWin = scanner.nextInt();
+            if (scanner.hasNextInt())
+                roundsToWin = scanner.nextInt();
+        } while (roundsToWin <= 0);
         do {
             System.out.print("Set fairness. Press \"f\" to play a fair game or press \"u\" to play unfair game: ");
             fairness = scanner.next();
         } while ((!fairness.equals("f")) && (!fairness.equals("u")));
     }
 
-    private void startGame() {
+    private void showControlsAndRules() {
         System.out.println("----------");
         System.out.println(
                 "Game controls and rules:\n" +

@@ -13,12 +13,19 @@ public class WeaponChoice {
         int userChoice;
         do {
             System.out.print("Choose your weapon: ");
-            scanner.nextLine();
-        } while (!scanner.hasNextInt());
-        do {
-            userChoice = scanner.nextInt();
-        } while (userChoice != 1 && userChoice != 2 && userChoice != 3 && userChoice != 4 && userChoice != 5);
+            userChoice = validateInput();
+        } while (userChoice < 1 || userChoice > 5);
         return Weapon.intToEnum(userChoice);
+    }
+
+    private int validateInput() {
+        String input;
+        try {
+            input = scanner.nextLine();
+            return Integer.parseInt(input);
+        } catch (Exception e) {
+        }
+        return 0;
     }
 
     public Weapon fairComputerChoice() {
