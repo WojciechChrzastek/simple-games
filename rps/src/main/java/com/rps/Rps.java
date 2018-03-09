@@ -32,12 +32,13 @@ public class Rps {
     private void setGameSettings() {
         System.out.print("Type in your name: ");
         userName = scanner.next();
+        roundsToWin = 0;
         do {
-            System.out.print("Hello " + userName + "! Set the number of won rounds needed to win the game: ");
+            System.out.print("Hello " + userName + "! Set the number (1-10) of won rounds needed to win the game: ");
             scanner.nextLine();
             if (scanner.hasNextInt())
                 roundsToWin = scanner.nextInt();
-        } while (roundsToWin <= 0);
+        } while (roundsToWin <= 0 || roundsToWin > 10);
         do {
             System.out.print("Set fairness. Press \"f\" to play a fair game or press \"u\" to play unfair game: ");
             fairness = scanner.next();
