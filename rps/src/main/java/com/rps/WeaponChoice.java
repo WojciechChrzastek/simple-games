@@ -12,20 +12,18 @@ public class WeaponChoice {
     public Weapon userChoice() {
         int userChoice;
         do {
-            System.out.print("Choose your weapon: ");
-            userChoice = validateInput();
+            userChoice = getUserInput();
         } while (userChoice < 1 || userChoice > 5);
         return Weapon.intToEnum(userChoice);
     }
 
-    private int validateInput() {
-        String input;
+    private int getUserInput() {
+        System.out.print("Choose your weapon: ");
         try {
-            input = scanner.nextLine();
-            return Integer.parseInt(input);
+            return Integer.parseInt(scanner.nextLine());
         } catch (Exception e) {
+            return 0;
         }
-        return 0;
     }
 
     public Weapon fairComputerChoice() {
