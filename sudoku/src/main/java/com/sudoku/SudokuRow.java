@@ -18,16 +18,23 @@ public class SudokuRow {
                 new SudokuElement(),
                 new SudokuElement(),
                 new SudokuElement()));
+    }
 
-
-/*    @Override
+    @Override
     public String toString() {
-        for(SudokuElement x : elements)
+        final StringBuilder sb = new StringBuilder();
 
-            return elements.toString();
+        sb.append("|   ");
 
-        "---------";
+        int elementNumber = 1;
+        for (SudokuElement element : elements) {
+            sb.append(element).append(" ");
+            if (elementNumber++ % 3 == 0 && elementNumber < 8) {
+                sb.append("  |   ");
+            }
+        }
 
-        return
-*/    }
+        sb.append("  |\n");
+        return sb.toString();
+    }
 }
