@@ -1,6 +1,13 @@
 package com.sudoku;
 
 public class SudokuGame {
+
+
+
+
+
+
+
 //    SudokuElement sudokuElement = new SudokuElement(1, );
 //
 //    SudokuRow sudokuRow = new SudokuRow();
