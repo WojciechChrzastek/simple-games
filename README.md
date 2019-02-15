@@ -11,6 +11,15 @@ Run by com.rps.RpsRunner.class
 
 ## Lottery
 
+Simulation of a lottery.
+1. Type in your name.
+2. Set how many numbers you want to check.
+3. Type in your lucky numbers.
+4. See if any of your number matches the random ones.
+5. Decide if you want to choose numbers again.
+6. Decide if you want computer to choose random numbers again.
+7. Decide if you want to play again or exit the game.
+
 Run by com.lottery.LotteryRunner.class
 
 ## Sudoku
